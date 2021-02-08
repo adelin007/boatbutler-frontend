@@ -84,7 +84,7 @@ export const Login = (props: RouteComponentProps) => {
 
     useEffect(() => {
         if(loggedIn){
-            props.history.push("/");
+            props.history.push("/user");
         }
     }, [loggedIn]);
 

@@ -10,7 +10,7 @@ import {
 import {Login} from "./components/Login";
 import UserProvider, { UserContext } from "./context/UserContext";
 import Navbar from "./components/NavBar";
-import DashboardHome from "./components/DashboardHome";
+import UserPanel from "./components/UserPanel";
 
 
 function App() {
@@ -20,7 +20,8 @@ function App() {
       <Router>
         <UserProvider>
           <Switch>
-              <Route exact path="/" component={DashboardHome}/>
+              <Route exact path="/" component={Login}/>
+              <Route path="/user" component={UserPanel}/>
               <Route exact path="/login" component={Login} />
           </Switch>
         </UserProvider>
