@@ -1,0 +1,1 @@
+export const BOAT_BUTLER_API = process.env.NODE_ENV === "production" ? "heroku" : "http://localhost:3001";
