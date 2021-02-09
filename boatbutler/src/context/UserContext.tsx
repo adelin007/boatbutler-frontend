@@ -7,7 +7,7 @@ import React, {
 
   import axios from "axios";
   import { withRouter } from "react-router-dom";
-  import {BOAT_BUTLER_API} from "../utils/definitions";
+  import {BOAT_BUTLER_API, JobWithBoatDetails} from "../utils/definitions";
 
   interface TokenBody {
     token: string;
@@ -18,6 +18,8 @@ import React, {
         loggedIn: boolean,
         logout: () => void;
         fetchAuthToken: (email: string, password: string) => Promise<void>;
+        fetchJobsWithBoatDetails: () => Promise<void>;
+        jobsWithBoatDetails: JobWithBoatDetails[] | undefined;
   }
 
   export const UserContext = createContext({} as ContextProps);
@@ -33,6 +35,8 @@ import React, {
         }
     });  
 
+    const [jobsWithBoatDetails, setJobsWithBoatDetails ] = useState<JobWithBoatDetails[]>();
+
     useEffect(() => {
         if (token) {
           setLoggedIn(true);
@@ -40,7 +44,7 @@ import React, {
         } else {
           setLoggedIn(false);
         }
-    }, [token]);
+    });
 
     const logout = () => {
         window.localStorage.removeItem("token");
@@ -91,12 +95,37 @@ import React, {
         }
       };
 
+      const fetchJobsWithBoatDetails = async() => {
+          try{
+          const response = await axios.get(`${BOAT_BUTLER_API}/api/company/jobs`, {
+            headers: { Authorization: "bearer " + token }
+          });
+          if (response.status === 200) {
+            const jobsRes: JobWithBoatDetails[] = response.data;
+            if (jobsRes) {
+                setJobsWithBoatDetails(jobsRes)
+              };
+          
+            }
+
+          }catch(error){
+            if (error && error.response && error.response.status === 401) {
+              logout();
+            }
+          console.log("ERROR fetch: ", error);
+        
+        }
+      }
+
+
     return(
         <UserContext.Provider value={{
             test: "testinggg",
             loggedIn,
             fetchAuthToken,
-            logout
+            logout,
+            jobsWithBoatDetails,
+            fetchJobsWithBoatDetails
         }}>
             {props.children}
         </UserContext.Provider>

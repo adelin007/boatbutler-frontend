@@ -84,7 +84,7 @@ export const Login = (props: RouteComponentProps) => {
 
     useEffect(() => {
         if(loggedIn){
-            props.history.push("/user");
+            props.history.push("/user/jobads");
         }
     }, [loggedIn]);
 
@@ -135,8 +135,6 @@ export const Login = (props: RouteComponentProps) => {
                 <div className={classes.terms}>
                     <Link>Terms & Conditions</Link>
                 </div>
-                {test && test}
-                
             </form>
         </Paper>
 
