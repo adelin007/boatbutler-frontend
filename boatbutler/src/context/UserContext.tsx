@@ -13,13 +13,39 @@ import React, {
     token: string;
   }
 
+  export interface ProposalDetails{
+    jobId: string;
+    date: string;
+    time: string;
+    text: string;
+    price: number;
+    fixedPrice: boolean;
+}
+
+export interface Proposal{
+  id: string;
+  status: string;
+  date: string;
+  time: string;
+  description: string;
+  negotiable: boolean;
+  job_id: string;
+  company_id: string;
+  price: number;
+}
   type ContextProps = {
         test: string,
         loggedIn: boolean,
         logout: () => void;
         fetchAuthToken: (email: string, password: string) => Promise<void>;
         fetchJobsWithBoatDetails: () => Promise<void>;
+        selectedJobAdId: string | undefined;
+        selectJobAdId: (jobId: string) => void;
         jobsWithBoatDetails: JobWithBoatDetails[] | undefined;
+        postProposal: (proposalDetails: ProposalDetails) => Promise<void>;
+        fetchProposals: () => void;
+        proposals: Proposal[] | undefined
+
   }
 
   export const UserContext = createContext({} as ContextProps);
@@ -36,6 +62,9 @@ import React, {
     });  
 
     const [jobsWithBoatDetails, setJobsWithBoatDetails ] = useState<JobWithBoatDetails[]>();
+    const [selectedJobAdId, setSelectedJobAdId] = useState<string | undefined>();
+    const [proposals, setProposals] = useState<Proposal[] | undefined>();
+  
 
     useEffect(() => {
         if (token) {
@@ -95,6 +124,25 @@ import React, {
         }
       };
 
+      const postProposal = async(proposalDetails: ProposalDetails) => {
+        try{
+          const response = await axios.post(`${BOAT_BUTLER_API}/api/company/proposals/new`, proposalDetails, {
+            headers: { Authorization: "bearer " + token },
+          });
+          if (response.status === 200) {
+              // set success!!
+              
+            }
+
+          }catch(error){
+            if (error && error.response && error.response.status === 401) {
+              logout();
+            }
+          console.log("error: ", error);
+        
+        }
+      }
+
       const fetchJobsWithBoatDetails = async() => {
           try{
           const response = await axios.get(`${BOAT_BUTLER_API}/api/company/jobs`, {
@@ -116,7 +164,33 @@ import React, {
         
         }
       }
+      const fetchProposals = async() => {
+        try{
+        const response = await axios.get(`${BOAT_BUTLER_API}/api/company/proposals`, {
+          headers: { Authorization: "bearer " + token }
+        });
+        if (response.status === 200) {
+          const proposals: Proposal[] = response.data;
+          if (proposals) {
+              setProposals(proposals)
+            };
+        
+          }
 
+        }catch(error){
+          if (error && error.response && error.response.status === 401) {
+            logout();
+          }
+        console.log("ERROR fetch: ", error);
+      
+      }
+    }
+
+      const selectJobAdId = (jobId: string) => {
+        if(jobId){
+          setSelectedJobAdId(jobId);
+        }
+      }
 
     return(
         <UserContext.Provider value={{
@@ -125,7 +199,12 @@ import React, {
             fetchAuthToken,
             logout,
             jobsWithBoatDetails,
-            fetchJobsWithBoatDetails
+            fetchJobsWithBoatDetails,
+            selectedJobAdId,
+            selectJobAdId,
+            postProposal,
+            proposals,
+            fetchProposals
         }}>
             {props.children}
         </UserContext.Provider>

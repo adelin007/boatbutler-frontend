@@ -28,6 +28,9 @@ import { UserContext } from "../context/UserContext";
 import Navbar from "./NavBar";
 import DashboardHome from "./DashboardHome";
 import JobAds from "./JobAds";
+import Proposals from "./Proposals";
+import Reviews from "./Reviews";
+import CreateProposal from './CreateProposal';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -67,8 +70,9 @@ const useStyles = makeStyles((theme) => ({
         color: "rgb(151, 178, 206)"
 
     },
-    btnTest: {
-        justifyContent: "left"
+    navButtonLabel: {
+        justifyContent: "left",
+
     }
 
 }));
@@ -76,7 +80,8 @@ const useStyles = makeStyles((theme) => ({
 enum DashboardMenuListValue {
     dashboard = "dashboard",
     jobads = "jobads",
-    proposals = "proposals"
+    proposals = "proposals",
+    reviews = "reviews"
 }
 
 
@@ -88,7 +93,7 @@ const UserPanel = (props: RouteComponentProps) => {
     const [selectedMenuItem, setSelectedMenuItem] = useState(DashboardMenuListValue.jobads);
 
     useEffect(() => {
-        // console.log("ROUTE PROPS: ", props);
+        console.log("ROUTE PROPS: ", props);
 
         if (props.match) {
             const matchPath = props.match.path;
@@ -103,6 +108,12 @@ const UserPanel = (props: RouteComponentProps) => {
                     case `${matchPath}/${DashboardMenuListValue.dashboard}`:
                         setSelectedMenuItem(DashboardMenuListValue.dashboard);
                         break;
+                    case `${matchPath}/${DashboardMenuListValue.proposals}`:
+                            setSelectedMenuItem(DashboardMenuListValue.proposals);
+                    break;
+                    case `${matchPath}/${DashboardMenuListValue.reviews}`:
+                        setSelectedMenuItem(DashboardMenuListValue.reviews);
+                    break;
                     default:
                         setSelectedMenuItem(DashboardMenuListValue.jobads)
                 }
@@ -135,7 +146,7 @@ const UserPanel = (props: RouteComponentProps) => {
                             to={`/user/${DashboardMenuListValue.dashboard}`}
                             className={classes.menuLink}
                         >
-                            <Button style={{ width: "100%", borderRadius: "0" }} classes={{ label: classes.btnTest }} className={selectedMenuItem === DashboardMenuListValue.dashboard ? classes.selectedListItem : classes.unselectedListItem}>
+                            <Button style={{ width: "100%", borderRadius: "0", textTransform: "none" }} classes={{ label: classes.navButtonLabel }} className={selectedMenuItem === DashboardMenuListValue.dashboard ? classes.selectedListItem : classes.unselectedListItem}>
                                 Dashboard
                             </Button>
 
@@ -144,8 +155,26 @@ const UserPanel = (props: RouteComponentProps) => {
                             to={`/user/${DashboardMenuListValue.jobads}`}
                             className={classes.menuLink}
                         >
-                            <Button style={{ width: "100%", borderRadius: "0" }} classes={{ label: classes.btnTest }} className={selectedMenuItem === DashboardMenuListValue.jobads ? classes.selectedListItem : classes.unselectedListItem}>
+                            <Button style={{ width: "100%", borderRadius: "0", textTransform: "none" }} classes={{ label: classes.navButtonLabel }} className={selectedMenuItem === DashboardMenuListValue.jobads ? classes.selectedListItem : classes.unselectedListItem}>
                                 Job Ads
+                            </Button>
+
+                        </Link>
+                        <Link
+                            to={`/user/${DashboardMenuListValue.proposals}`}
+                            className={classes.menuLink}
+                        >
+                            <Button style={{ width: "100%", borderRadius: "0", textTransform: "none" }} classes={{ label: classes.navButtonLabel }} className={selectedMenuItem === DashboardMenuListValue.proposals ? classes.selectedListItem : classes.unselectedListItem}>
+                                Proposals
+                            </Button>
+
+                        </Link>
+                        <Link
+                            to={`/user/${DashboardMenuListValue.reviews}`}
+                            className={classes.menuLink}
+                        >
+                            <Button style={{ width: "100%", borderRadius: "0", textTransform: "none" }} classes={{ label: classes.navButtonLabel }} className={selectedMenuItem === DashboardMenuListValue.reviews ? classes.selectedListItem : classes.unselectedListItem}>
+                                Reviews
                             </Button>
 
                         </Link>
@@ -163,6 +192,21 @@ const UserPanel = (props: RouteComponentProps) => {
                             exact
                             path={`${props.match.path}/${DashboardMenuListValue.jobads}`}
                             component={JobAds}
+                        />
+                         <Route
+                            exact
+                            path={`${props.match.path}/${DashboardMenuListValue.proposals}`}
+                            component={Proposals}
+                        />
+                           <Route
+                            exact
+                            path={`${props.match.path}/${DashboardMenuListValue.reviews}`}
+                            component={Reviews}
+                        />
+                            <Route
+                            exact
+                            path={`${props.match.path}/${DashboardMenuListValue.jobads}/createproposal`}
+                            component={CreateProposal}
                         />
                     </Switch>
                 </Grid>

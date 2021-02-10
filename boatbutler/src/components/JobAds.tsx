@@ -11,8 +11,21 @@ import Paper from "@material-ui/core/Paper";
 import CardMedia from '@material-ui/core/CardMedia';
 import Card from '@material-ui/core/Card';
 import Button from "@material-ui/core/Button";
+import List from "@material-ui/core/List";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import { makeStyles } from '@material-ui/core/styles';
+import {
+    BrowserRouter as Router,
+    Route,
+    Redirect,
+    RouteComponentProps,
+    Link,
+    Switch,
+    withRouter
+} from "react-router-dom";
 
 const useStyles = makeStyles({
     root:{
@@ -48,13 +61,26 @@ const useStyles = makeStyles({
     cardTitle: {
         // marginLeft: "35px"
         color: "gray"
+    },
+    list: {
+        paddingLeft: "20px",
+    },
+    listItem: {
+        borderBottom: "1px solid lightgray",
+        
+    },
+    listItemMainText: {
+        color: "gray"
+    },
+    listItemSecondaryText:{
+
     }
 });
 
 
-const JobAds = () => {
+const JobAds = (props: RouteComponentProps) => {
     const classes = useStyles();
-    const { jobsWithBoatDetails, fetchJobsWithBoatDetails } = useContext(UserContext);
+    const { jobsWithBoatDetails, fetchJobsWithBoatDetails, selectJobAdId, selectedJobAdId } = useContext(UserContext);
 
     useEffect(() => {
         // fetch on first render
@@ -64,6 +90,16 @@ const JobAds = () => {
     useEffect(() => {
         console.log("JOBS: ", jobsWithBoatDetails);
     }, [jobsWithBoatDetails]);
+
+    const onClickMakeProposal = (jobId: string) => {
+            console.log("GONNA PROPOSE TO: ", jobId);
+            if(jobId){
+                selectJobAdId(jobId);
+                if(props && props.match && props.match.path){
+                    props.history.push(`${props.match.path}/createproposal`);
+                }
+            }
+    }
 
 
     return (
@@ -80,78 +116,115 @@ const JobAds = () => {
                         <Paper elevation={3}>
                             <Grid container>
                                 <Grid item xs={5} md={5} lg={5}>
-                                {/* <Grid container>
+                                     <List dense aria-label="jobadsList" className={classes.list}>
+                                        <ListItem className={classes.listItem}>
+                                            <Grid container >
+                                                <Grid item xs={6} md={6} lg={6} >
+                                                    <ListItemText primary="Boat Name" className={classes.listItemMainText}/>
+                                                </Grid>
+                                                <Grid item xs={6} md={6} lg={6} >
+                                                    <ListItemText primary={jobWithBoatDetails.boat.name} />
+                                                </Grid>
+                                            </Grid>
+  
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <Grid container >
+                                                    <Grid item xs={6} md={6} lg={6} >
+                                                        <ListItemText primary="Boat Type" className={classes.listItemMainText}/>
+                                                    </Grid>
+                                                    <Grid item xs={6} md={6} lg={6} >
+                                                        <ListItemText primary={jobWithBoatDetails.boat.boat_type} />
+                                                    </Grid>
+                                            </Grid>
+                        
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <Grid container >
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary="Boat Location" className={classes.listItemMainText}/>    
+                                                        </Grid>
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary={jobWithBoatDetails.boat.address} />
+                                                        </Grid>
+                                            </Grid>
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <Grid container >
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary="Due Date" className={classes.listItemMainText}/>    
+                                                        </Grid>
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary={jobWithBoatDetails.job.due_date} />
+                                                        </Grid>
+                                            </Grid>
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <Grid container >
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary="Due Time" className={classes.listItemMainText}/>    
+                                                        </Grid>
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary={jobWithBoatDetails.job.due_time} />
+                                                        </Grid>
+                                            </Grid>
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <Grid container >
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary="Job Type" className={classes.listItemMainText}/>    
+                                                        </Grid>
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary={jobWithBoatDetails.job.is_emergency ? "Emergency" : "Normal"} />
+                                                        </Grid>
+                                            </Grid>
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <Grid container >
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary="Job Category" className={classes.listItemMainText}/>    
+                                                        </Grid>
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary={jobWithBoatDetails.job.category} />
+                                                        </Grid>
+                                            </Grid>
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <Grid container >
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary="Job Sub Category" className={classes.listItemMainText}/>    
+                                                        </Grid>
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary={jobWithBoatDetails.job.subcategory} />
+                                                        </Grid>
+                                            </Grid>
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <Grid container >
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary="Job Description" className={classes.listItemMainText}/>    
+                                                        </Grid>
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary={jobWithBoatDetails.job.description} />
+                                                        </Grid>
+                                            </Grid>
+                                        </ListItem>
+                                        <ListItem className={classes.listItem}>
+                                            <Grid container >
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary="Preffered Contact" className={classes.listItemMainText}/>    
+                                                        </Grid>
+                                                        <Grid item xs={6} md={6} lg={6} >
+                                                            <ListItemText primary={jobWithBoatDetails.user_contact_details} />
+                                                        </Grid>
+                                            </Grid>
+                                        </ListItem>
+                                     </List>
 
-                                </Grid> */}
-                                USE LIST INSTEAD OF TABLE WITH KEY VALUE PAIRS SO WE CAN CONTROL THE HEIGHT
-                                    <Table className={classes.table} aria-label="simple table">
-                                        <TableBody>
-                                            <TableRow key={jobWithBoatDetails.job._id}>
-                                                <TableCell component="th" scope="row" className={classes.tableCellTitle}>
-                                                    Boat Name
-                                                    </TableCell>
-                                                <TableCell align="right">{jobWithBoatDetails.boat.name}</TableCell>
 
-                                            </TableRow>
-                                            <TableRow key={jobWithBoatDetails.job._id}>
-                                                <TableCell component="th" scope="row" className={classes.tableCellTitle}>
-                                                    Boat Type
-                                                    </TableCell>
-                                                <TableCell align="right">{jobWithBoatDetails.boat.boat_type}</TableCell>
-                                            </TableRow>
-                                            <TableRow key={jobWithBoatDetails.job._id}>
-                                                <TableCell component="th" scope="row" className={classes.tableCellTitle}>
-                                                    Boat Location
-                                                    </TableCell>
-                                                <TableCell align="right">{jobWithBoatDetails.boat.address}</TableCell>
-                                            </TableRow>
-                                            <TableRow key={jobWithBoatDetails.job._id}>
-                                                <TableCell component="th" scope="row" className={classes.tableCellTitle}>
-                                                    Due Date
-                                                    </TableCell>
-                                                <TableCell align="right">{jobWithBoatDetails.job.due_date}</TableCell>
-                                            </TableRow>
-                                            <TableRow key={jobWithBoatDetails.job._id}>
-                                                <TableCell component="th" scope="row" className={classes.tableCellTitle}>
-                                                    Due Time
-                                                    </TableCell>
-                                                <TableCell align="right">{jobWithBoatDetails.job.due_time}</TableCell>
-                                            </TableRow>
-                                            <TableRow key={jobWithBoatDetails.job._id}>
-                                                <TableCell component="th" scope="row" className={classes.tableCellTitle}>
-                                                    Job Type
-                                                    </TableCell>
-                                                <TableCell align="right">{jobWithBoatDetails.job.is_emergency ? "Emergency" : "Normal"}</TableCell>
-                                            </TableRow>
-                                            <TableRow key={jobWithBoatDetails.job._id}>
-                                                <TableCell component="th" scope="row" className={classes.tableCellTitle}>
-                                                    Job Category
-                                                    </TableCell>
-                                                <TableCell align="right">{jobWithBoatDetails.job.category}</TableCell>
-                                            </TableRow>
-                                            <TableRow key={jobWithBoatDetails.job._id}>
-                                                <TableCell component="th" scope="row" className={classes.tableCellTitle}>
-                                                    Job Sub Category
-                                                    </TableCell>
-                                                <TableCell align="right">{jobWithBoatDetails.job.subcategory}</TableCell>
-                                            </TableRow>
-                                            <TableRow key={jobWithBoatDetails.job._id}>
-                                                <TableCell component="th" scope="row" className={classes.tableCellTitle}>
-                                                    Job Description
-                                                    </TableCell>
-                                                <TableCell align="right">{jobWithBoatDetails.job.description}</TableCell>
-                                            </TableRow>
-                                            <TableRow key={jobWithBoatDetails.job._id}>
-                                                <TableCell component="th" scope="row" className={classes.tableCellTitle}>
-                                                    Preferred Contact
-                                                    </TableCell>
-                                                <TableCell align="right">{jobWithBoatDetails.user_contact_details}</TableCell>
-                                            </TableRow>
-                                        </TableBody>
 
-                                    </Table>
                                     <Grid container justify="center" style={{marginTop: "30px", marginBottom: "30px"}}>
-                                         <Button style={{backgroundColor: "orange", color: "white"}}>Report User</Button>
+                                         <Button style={{backgroundColor: "orange", color: "white", marginRight: "20px", textTransform: "none", height: "25px", width: "135px"}}>Report User</Button>
                                     </Grid>
 
                              
@@ -175,11 +248,11 @@ const JobAds = () => {
                                             </Card>
 
                                         </Grid>
-                                        <Grid container justify="center">
-                                            <Button style={{backgroundColor: "green", color: "white", marginRight: "20px"}}>
-                                            Proposal
+                                        <Grid container justify="center" style={{marginTop: "15%"}}>
+                                            <Button onClick={() => onClickMakeProposal(jobWithBoatDetails.job._id)} style={{backgroundColor: "green", color: "white", marginRight: "20px", textTransform: "none", height: "25px", width: "135px"}}>
+                                           Make A Proposal
                                             </Button>
-                                            <Button style={{backgroundColor: "red", color: "white"}}>
+                                            <Button style={{backgroundColor: "red", color: "white", marginRight: "20px", textTransform: "none", height: "25px", width: "135px"}}>
                                             Reject
                                             </Button>
                                         </Grid>
@@ -199,4 +272,4 @@ const JobAds = () => {
     )
 };
 
-export default JobAds;
+export default withRouter(JobAds);
