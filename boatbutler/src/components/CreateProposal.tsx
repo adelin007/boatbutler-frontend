@@ -1,37 +1,24 @@
 import React, { useEffect, useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
 import Grid from "@material-ui/core/Grid";
 import Typography from '@material-ui/core/Typography';
 import Paper from "@material-ui/core/Paper";
-import CardMedia from '@material-ui/core/CardMedia';
-import Card from '@material-ui/core/Card';
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
+import ListItem from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
-import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
-
+import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import {
     BrowserRouter as Router,
-    Route,
-    Redirect,
     RouteComponentProps,
-    Link,
-    Switch,
     withRouter
 } from "react-router-dom";
 
 
-import {ProposalDetails} from ".././context/UserContext";
+import { ProposalDetails } from ".././context/UserContext";
 
 const useStyles = makeStyles({
     root: {
@@ -51,21 +38,14 @@ const useStyles = makeStyles({
         color: "gray"
     },
     card: {
-        // maxWidth: 350
-        // marginLeft: "35px",
-        // marginLeft: "35px",
-        // marginRight: "35px"
 
     },
     media: {
         height: 300,
         margin: 0,
-        // width: 300,
-        padding: 0 // 16:9
-        // margin: "auto"
+        padding: 0 
     },
     cardTitle: {
-        // marginLeft: "35px"
         color: "gray"
     },
     list: {
@@ -83,7 +63,7 @@ const useStyles = makeStyles({
     }
 });
 
-const initialProposalDetails: ProposalDetails={
+const initialProposalDetails: ProposalDetails = {
     jobId: "",
     date: "",
     time: "",
@@ -94,33 +74,23 @@ const initialProposalDetails: ProposalDetails={
 
 const CreateProposal = (props: RouteComponentProps) => {
     const classes = useStyles();
-    const { jobsWithBoatDetails, fetchJobsWithBoatDetails, selectJobAdId, selectedJobAdId, postProposal } = useContext(UserContext);
-    const [proposalDetails, setProposalDetails ] = useState<ProposalDetails>(initialProposalDetails);
-    const [validProposalDetails, setValidProposalDetails]  = useState(false);
-    
+    const { jobsWithBoatDetails, selectedJobAdId, postProposal } = useContext(UserContext);
+    const [proposalDetails, setProposalDetails] = useState<ProposalDetails>(initialProposalDetails);
+    const [validProposalDetails, setValidProposalDetails] = useState(false);
+
     useEffect(() => {
-        if(selectedJobAdId){
-            setProposalDetails({...proposalDetails, jobId: selectedJobAdId});
+        if (selectedJobAdId) {
+            setProposalDetails({ ...proposalDetails, jobId: selectedJobAdId });
         }
     }, [selectedJobAdId]);
 
     useEffect(() => {
-        console.log("Proposal details: ", proposalDetails);
-        if(!proposalDetails || !proposalDetails.jobId || !proposalDetails.date || !proposalDetails.text || !proposalDetails.time || Number.isNaN(proposalDetails.price) || proposalDetails.price <= 0){
+        if (!proposalDetails || !proposalDetails.jobId || !proposalDetails.date || !proposalDetails.text || !proposalDetails.time || Number.isNaN(proposalDetails.price) || proposalDetails.price <= 0) {
             setValidProposalDetails(false);
         } else {
             setValidProposalDetails(true);
         }
     }, [proposalDetails]);
-
-    // useEffect(() => {
-    //     // fetch on first render
-    //     fetchJobsWithBoatDetails();
-    // }, []);
-
-    // useEffect(() => {
-    //     console.log("JOBS: ", jobsWithBoatDetails);
-    // }, [jobsWithBoatDetails]);
 
 
     const handleGoBackToJobAds = () => {
@@ -128,39 +98,39 @@ const CreateProposal = (props: RouteComponentProps) => {
 
     }
     const handleChangeFixedPrice = () => {
-        setProposalDetails({...proposalDetails, fixedPrice: !proposalDetails.fixedPrice})
+        setProposalDetails({ ...proposalDetails, fixedPrice: !proposalDetails.fixedPrice })
     }
     const handleChangeProposalDetails = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        console.log("CLICK ON: ", e.target.name);
+        
         if (proposalDetails) {
-          switch (e.target.name) {
-            case "date":
-              setProposalDetails({ ...proposalDetails, date: e.target.value });
-              break;
-            case "time":
-                setProposalDetails({ ...proposalDetails, time: e.target.value });
-              break;
-            case "text":
-                setProposalDetails({ ...proposalDetails, text: e.target.value });
-              break;
-            case "price":
-                setProposalDetails({ ...proposalDetails, price: Number.parseInt(e.target.value) });
-              break;   
-          }
+            switch (e.target.name) {
+                case "date":
+                    setProposalDetails({ ...proposalDetails, date: e.target.value });
+                    break;
+                case "time":
+                    setProposalDetails({ ...proposalDetails, time: e.target.value });
+                    break;
+                case "text":
+                    setProposalDetails({ ...proposalDetails, text: e.target.value });
+                    break;
+                case "price":
+                    setProposalDetails({ ...proposalDetails, price: Number.parseInt(e.target.value)});
+                    break;   
+            }
         }
     }
 
-    const handleClickSubmitProposal = async() => {
-            if(proposalDetails && validProposalDetails){
-                await postProposal(proposalDetails);
-                props.history.push("/user/jobads");
-            }
+    const handleClickSubmitProposal = async () => {
+        if (proposalDetails && validProposalDetails) {
+            await postProposal(proposalDetails);
+            props.history.push("/user/jobads");
+        }
     }
 
     return (
         <div className={classes.root}>
-            {jobsWithBoatDetails && jobsWithBoatDetails.filter(jobWithDetails=> jobWithDetails.job._id === selectedJobAdId).map((jobWithBoatDetails) => (
+            {jobsWithBoatDetails && jobsWithBoatDetails.filter(jobWithDetails => jobWithDetails.job._id === selectedJobAdId).map((jobWithBoatDetails) => (
                 <Grid container className={classes.container}>
                     <Grid item xs={12} md={12} lg={12}>
                         <Typography variant="h5" className={classes.title}>
@@ -325,7 +295,7 @@ const CreateProposal = (props: RouteComponentProps) => {
                                             name="text"
                                             value={proposalDetails.text}
                                             error={!proposalDetails || !proposalDetails.text}
-                                            onChange={handleChangeProposalDetails}    
+                                            onChange={handleChangeProposalDetails}
                                             InputLabelProps={{
                                                 shrink: true,
                                             }}
@@ -340,7 +310,7 @@ const CreateProposal = (props: RouteComponentProps) => {
                                             placeholder="Proposal Price"
                                             name="price"
                                             value={proposalDetails.price}
-                                            error={!proposalDetails || Number.isNaN(proposalDetails.price) || proposalDetails.price <= 0 }
+                                            error={!proposalDetails || Number.isNaN(proposalDetails.price) || proposalDetails.price <= 0}
                                             onChange={handleChangeProposalDetails}
                                             InputLabelProps={{
                                                 shrink: true,

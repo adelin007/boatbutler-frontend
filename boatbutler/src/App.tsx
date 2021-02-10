@@ -1,24 +1,21 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import './App.css';
 import {
   BrowserRouter as Router,
   Route,
-  Link,
-  Redirect,
   Switch
 } from "react-router-dom";
 import {Login} from "./components/Login";
-import UserProvider, { UserContext } from "./context/UserContext";
-import Navbar from "./components/NavBar";
+import UserProvider from "./context/UserContext";
 import UserPanel from "./components/UserPanel";
-
+import AppStateSnackbar from "./components/AppStateSnackbar";
 
 function App() {
-  const { test } = useContext(UserContext);
   return (
     <div style={{height: "100vh", width: "100vw"}}>
       <Router>
         <UserProvider>
+        <AppStateSnackbar />
           <Switch>
               <Route exact path="/" component={Login}/>
               <Route path="/user" component={UserPanel}/>
@@ -26,7 +23,6 @@ function App() {
           </Switch>
         </UserProvider>
       </Router>
-      {/* <Login /> */}
     </div>
   );
 }

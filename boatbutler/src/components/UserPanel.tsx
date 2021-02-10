@@ -1,24 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { makeStyles } from "@material-ui/core/styles";
-import { CustomInput } from "./CustomInput";
 import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Typography from '@material-ui/core/Typography';
-import Paper from "@material-ui/core/Paper";
-import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
-import Tooltip from "@material-ui/core/Tooltip";
-import MenuItem from "@material-ui/core/MenuItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import Grid from "@material-ui/core/Grid";
-
 import {
     BrowserRouter as Router,
     Route,
-    Redirect,
     RouteComponentProps,
     Link,
     Switch,
@@ -46,14 +33,12 @@ const useStyles = makeStyles((theme) => ({
     menuList: {
         padding: "0",
         backgroundColor: "rgb(29,43,71)"
-        //151 178 206
     },
     openMenuClass: {
         backgroundColor: "rgb(29,43,71)",
-        height: "100vh"
+        height: "300vh"
     },
-    closedMenuClass:{
-        // backgroundColor: "white",
+    closedMenuClass: {
         height: "100vh"
     },
     menuLink: {
@@ -61,18 +46,15 @@ const useStyles = makeStyles((theme) => ({
         color: "black"
     },
     selectedListItem: {
-        // color: "rgb(151, 178, 206)"
         backgroundColor: "rgb(151, 178, 206) !important",
         color: "rgb(29,43,71)"
     },
     unselectedListItem: {
-        // rgba(0, 0, 0, 0.04)
         color: "rgb(151, 178, 206)"
 
     },
     navButtonLabel: {
         justifyContent: "left",
-
     }
 
 }));
@@ -87,14 +69,12 @@ enum DashboardMenuListValue {
 
 const UserPanel = (props: RouteComponentProps) => {
     const classes = useStyles();
-    const { loggedIn, logout } = useContext(UserContext);
+    const { loggedIn } = useContext(UserContext);
 
     const [openMenu, setOpenMenu] = useState(true);
     const [selectedMenuItem, setSelectedMenuItem] = useState(DashboardMenuListValue.jobads);
 
     useEffect(() => {
-        console.log("ROUTE PROPS: ", props);
-
         if (props.match) {
             const matchPath = props.match.path;
             if (matchPath) {
@@ -109,11 +89,11 @@ const UserPanel = (props: RouteComponentProps) => {
                         setSelectedMenuItem(DashboardMenuListValue.dashboard);
                         break;
                     case `${matchPath}/${DashboardMenuListValue.proposals}`:
-                            setSelectedMenuItem(DashboardMenuListValue.proposals);
-                    break;
+                        setSelectedMenuItem(DashboardMenuListValue.proposals);
+                        break;
                     case `${matchPath}/${DashboardMenuListValue.reviews}`:
                         setSelectedMenuItem(DashboardMenuListValue.reviews);
-                    break;
+                        break;
                     default:
                         setSelectedMenuItem(DashboardMenuListValue.jobads)
                 }
@@ -128,7 +108,6 @@ const UserPanel = (props: RouteComponentProps) => {
         }
     }, [loggedIn]);
 
-
     const handleClickToggleMenu = () => {
         setOpenMenu(prev => !prev)
     }
@@ -136,8 +115,6 @@ const UserPanel = (props: RouteComponentProps) => {
     return (
         <div>
             <Navbar onClickMenu={handleClickToggleMenu} />
-
-
             <Grid container>
                 <Grid item xs={3} md={3} lg={3} className={openMenu ? classes.openMenuClass : classes.closedMenuClass}>
 
@@ -193,17 +170,17 @@ const UserPanel = (props: RouteComponentProps) => {
                             path={`${props.match.path}/${DashboardMenuListValue.jobads}`}
                             component={JobAds}
                         />
-                         <Route
+                        <Route
                             exact
                             path={`${props.match.path}/${DashboardMenuListValue.proposals}`}
                             component={Proposals}
                         />
-                           <Route
+                        <Route
                             exact
                             path={`${props.match.path}/${DashboardMenuListValue.reviews}`}
                             component={Reviews}
                         />
-                            <Route
+                        <Route
                             exact
                             path={`${props.match.path}/${DashboardMenuListValue.jobads}/createproposal`}
                             component={CreateProposal}

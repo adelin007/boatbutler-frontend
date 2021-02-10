@@ -1,10 +1,5 @@
 import React, { useEffect, useContext } from "react";
 import { UserContext } from "../context/UserContext";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
 import Grid from "@material-ui/core/Grid";
 import Typography from '@material-ui/core/Typography';
 import Paper from "@material-ui/core/Paper";
@@ -13,50 +8,39 @@ import Card from '@material-ui/core/Card';
 import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItem from '@material-ui/core/ListItem';
+
 
 import { makeStyles } from '@material-ui/core/styles';
 import {
     BrowserRouter as Router,
-    Route,
-    Redirect,
     RouteComponentProps,
-    Link,
-    Switch,
     withRouter
 } from "react-router-dom";
 
 const useStyles = makeStyles({
     root:{
-        marginTop: "20px"
+        marginTop: "20px",
     },
     title: {
         marginBottom: "20px",
         color: "gray"
     },
     container:{
-        marginLeft: "30px"
+        marginLeft: "30px", 
     },
     table: {
-        
     },
     tableCellTitle:{
         color: "gray"
     },
     card: {
-        // maxWidth: 350
-        // marginLeft: "35px",
-        // marginLeft: "35px",
-        // marginRight: "35px"
 
     },
     media: {
         height: 300,
         margin: 0,
-        // width: 300,
-        padding: 0 // 16:9
-        // margin: "auto"
+        padding: 0 
     },
     cardTitle: {
         // marginLeft: "35px"
@@ -76,7 +60,6 @@ const useStyles = makeStyles({
 
     }
 });
-
 
 const JobAds = (props: RouteComponentProps) => {
     const classes = useStyles();
@@ -100,18 +83,18 @@ const JobAds = (props: RouteComponentProps) => {
                 }
             }
     }
-
-
     return (
         <div className={classes.root}>
-            {jobsWithBoatDetails && jobsWithBoatDetails.map((jobWithBoatDetails) => (
-                <Grid container className={classes.container}>
-                    <Grid item xs={12} md={12} lg={12}>
+        <Grid container >
+            <Grid item xs={1} md={1} lg={1}></Grid>
+            <Grid item xs={10} md={10} lg={10}>
+                <Grid item xs={12} md={12} lg={12}>
                         <Typography variant="h5" className={classes.title}>
-                            Job Description
-                    </Typography>
-                    </Grid>
-
+                                Job Description
+                        </Typography>
+                 </Grid>
+            {jobsWithBoatDetails && jobsWithBoatDetails.map((jobWithBoatDetails) => (
+                <Grid container style={{marginTop: "20px"}}>
                     <Grid item xs={12} md={12} lg={12}>
                         <Paper elevation={3}>
                             <Grid container>
@@ -266,8 +249,13 @@ const JobAds = (props: RouteComponentProps) => {
 
                         </Paper>
                     </Grid>
-                </Grid>
+                    </Grid>
+                
             ))}
+            </Grid>
+            <Grid item xs={1} md={1} lg={1}></Grid>
+            
+            </Grid>
         </div>
     )
 };
