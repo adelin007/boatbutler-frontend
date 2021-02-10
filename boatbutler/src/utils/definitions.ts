@@ -1,4 +1,4 @@
-export const BOAT_BUTLER_API = process.env.NODE_ENV === "production" ? "https://boatbutler.herokuapp.com/" : "http://localhost:3001";
+export const BOAT_BUTLER_API = process.env.NODE_ENV === "production" ? "https://boatbutler.herokuapp.com" : "http://localhost:3001";
 
 
 export enum MediaType{
